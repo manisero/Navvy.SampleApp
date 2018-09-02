@@ -55,12 +55,12 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
         }
 
         private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess(
-            Lazy<CsvReader> ordersCsvReader,
+            Lazy<CsvReader> csvReader,
             int batchSize)
         {
-            ordersCsvReader.Value.Read();
-            ordersCsvReader.Value.ReadHeader();
-            var orders = ordersCsvReader.Value.GetRecords<Order>();
+            csvReader.Value.Read();
+            csvReader.Value.ReadHeader();
+            var orders = csvReader.Value.GetRecords<Order>();
             
             foreach (var batch in orders.Batch(batchSize))
             {
@@ -96,7 +96,24 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
             ICollection<OrderToProcess> orders,
             OrdersStats stats)
         {
-            return new OrdersStats();
+            var price = 0m;
+            var costRate = 0f;
+            var profit = 0m;
+
+            foreach (var order in orders)
+            {
+                price += order.Order.Price;
+                costRate += order.Order.CostRate;
+                profit += order.Profit;
+            }
+
+            return new OrdersStats
+            {
+                OrdersCount = stats.OrdersCount + orders.Count,
+                TotalPrice = stats.TotalPrice + price,
+                TotalCostRate = stats.TotalCostRate + costRate,
+                TotalProfit = stats.TotalProfit + profit
+            };
         }
     }
 }

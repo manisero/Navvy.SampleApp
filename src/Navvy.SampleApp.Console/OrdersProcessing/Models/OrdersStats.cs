@@ -2,12 +2,12 @@
 {
     public class OrdersStats
     {
+        public int OrdersCount { get; set; }
+
         public decimal TotalPrice { get; set; }
 
-        public decimal AvgPrice { get; set; }
+        public float TotalCostRate { get; set; }
 
         public decimal TotalProfit { get; set; }
-
-        public decimal AvgProfit { get; set; }
     }
 }

@@ -11,6 +11,7 @@
     {
         public string OrdersFilePath { get; set; }
         public string ProfitsFilePath { get; set; }
+        public string SummaryFilePath { get; set; }
     }
 
     public class OrdersProcessingState

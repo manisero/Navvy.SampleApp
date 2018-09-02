@@ -21,7 +21,8 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
                 Parameters = new OrdersProcessingParameters
                 {
                     OrdersFilePath = Path.GetTempFileName(),
-                    ProfitsFilePath = Path.GetTempFileName()
+                    ProfitsFilePath = Path.GetTempFileName(),
+                    SummaryFilePath = Path.GetTempFileName()
                 },
                 State = new OrdersProcessingState()
             };
