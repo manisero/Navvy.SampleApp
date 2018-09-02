@@ -5,6 +5,7 @@ using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.PipelineProcessing;
+using Manisero.Navvy.PipelineProcessing.Models;
 using Navvy.SampleApp.Console.OrdersProcessing.Models;
 using Navvy.SampleApp.Console.Utils;
 
