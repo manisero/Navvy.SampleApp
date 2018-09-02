@@ -24,8 +24,10 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
 
             yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
-                ReadOrdersToProcess(ordersCsvReader, batchSize),
-                expectedBatchesCount,
+                new LazyEnumerablePipelineInput<ICollection<OrderToProcess>>(
+                    new Lazy<IEnumerable<ICollection<OrderToProcess>>>(
+                        () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize)),
+                    new Lazy<int>(() => expectedBatchesCount)),
                 new List<PipelineBlock<ICollection<OrderToProcess>>>
                 {
                     new PipelineBlock<ICollection<OrderToProcess>>(
@@ -56,19 +58,16 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
         }
 
         private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess(
-            Lazy<CsvReader> csvReader,
+            CsvReader csvReader,
             int batchSize)
         {
-            csvReader.Value.Read();
-            csvReader.Value.ReadHeader();
-            var orders = csvReader.Value.GetRecords<Order>();
-            
-            foreach (var batch in orders.Batch(batchSize))
-            {
-                yield return batch
-                    .Select(order => new OrderToProcess { Order = order })
-                    .ToArray();
-            }
+            csvReader.Read();
+            csvReader.ReadHeader();
+
+            return csvReader
+                .GetRecords<Order>()
+                .Select(order => new OrderToProcess { Order = order })
+                .Batch(batchSize);
         }
 
         private decimal CalculateOrderProfit(

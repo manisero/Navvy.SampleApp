@@ -28,7 +28,7 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
             };
 
             var batchesCount = 10;
-            var batchSize = 1000000;
+            var batchSize = 1000;
 
             var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
             var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
