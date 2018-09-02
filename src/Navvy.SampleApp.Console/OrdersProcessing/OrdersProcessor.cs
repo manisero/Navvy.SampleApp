@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Manisero.Navvy;
 using Manisero.Navvy.Core;
 using Manisero.Navvy.Core.Events;
@@ -24,7 +26,10 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
                 taskStarted: x => System.Console.WriteLine("Task started."),
                 taskEnded: x => System.Console.WriteLine($"Task ended after {x.Duration.TotalMilliseconds}ms."),
                 stepStarted: x => System.Console.WriteLine($"{x.Step.Name}:"),
-                stepEnded: x => System.Console.WriteLine($"{x.Step.Name} took {x.Duration.TotalMilliseconds}ms."));
+                stepEnded: x => System.Console.WriteLine($"{x.Step.Name} took {x.Duration.TotalMilliseconds}ms."),
+                stepSkipped: x => System.Console.WriteLine($"{x.Step.Name} skipped"),
+                stepCanceled: x => System.Console.WriteLine($"{x.Step.Name} canceled"),
+                stepFailed: x => System.Console.WriteLine($"{x.Step.Name} failed"));
 
             var pipelineEvents = new PipelineExecutionEvents(
                 itemStarted: x => System.Console.WriteLine($"  Item {x.ItemNumber}:"),
@@ -43,7 +48,22 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
         {
             var task = _ordersProcessingTaskFactory.Create();
 
-            return _executor.Execute(task, _progress);
+            using (var cancellationSource = new CancellationTokenSource())
+            {
+                Task.Run(() => WaitForCancellation(cancellationSource));
+
+                return _executor.Execute(task, _progress, cancellationSource.Token);
+            }
+        }
+
+        private static void WaitForCancellation(CancellationTokenSource cancellationSource)
+        {
+            var input = (char)System.Console.Read();
+
+            if (input == 'c')
+            {
+                cancellationSource.Cancel();
+            }
         }
     }
 }
