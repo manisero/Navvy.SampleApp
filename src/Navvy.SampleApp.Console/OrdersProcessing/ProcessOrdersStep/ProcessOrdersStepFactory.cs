@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CsvHelper;
@@ -17,14 +18,12 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
             int expectedBatchesCount,
             OrdersProcessingContext context)
         {
-            var ordersCsvReader = new CsvReader(new StreamReader(context.Parameters.OrdersFilePath));
-            var orders = ordersCsvReader.GetRecords<Order>();
-
-            var profitsCsvWriter = new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath));
+            var ordersCsvReader = new Lazy<CsvReader>(() => new CsvReader(new StreamReader(context.Parameters.OrdersFilePath)));
+            var profitsCsvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath)));
 
             yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
-                ReadOrdersToProcess(orders, batchSize),
+                ReadOrdersToProcess(ordersCsvReader, batchSize),
                 expectedBatchesCount,
                 new List<PipelineBlock<ICollection<OrderToProcess>>>
                 {
@@ -39,7 +38,7 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
                         }),
                     new PipelineBlock<ICollection<OrderToProcess>>(
                         "WriteProfits",
-                        x => WriteProfits(x, profitsCsvWriter)),
+                        x => WriteProfits(x, profitsCsvWriter.Value)),
                     new PipelineBlock<ICollection<OrderToProcess>>(
                         "UpdateStats",
                         x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
@@ -49,24 +48,26 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
                 "ProcessOrdersCleanup",
                 () =>
                 {
-                    ordersCsvReader.Dispose();
-                    profitsCsvWriter.Dispose();
+                    ordersCsvReader.ValueIfCreated()?.Dispose();
+                    profitsCsvWriter.ValueIfCreated()?.Dispose();
                 },
                 x => true);
         }
 
         private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess(
-            IEnumerable<Order> orders,
+            Lazy<CsvReader> ordersCsvReader,
             int batchSize)
         {
-            return orders
-                .Batch(batchSize)
-                .Select(
-                    batch => batch.Select(order => new OrderToProcess
-                          {
-                              Order = order
-                          })
-                          .ToArray());
+            ordersCsvReader.Value.Read();
+            ordersCsvReader.Value.ReadHeader();
+            var orders = ordersCsvReader.Value.GetRecords<Order>();
+            
+            foreach (var batch in orders.Batch(batchSize))
+            {
+                yield return batch
+                    .Select(order => new OrderToProcess { Order = order })
+                    .ToArray();
+            }
         }
 
         private decimal CalculateOrderProfit(

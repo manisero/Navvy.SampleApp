@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.PipelineProcessing;
 using Navvy.SampleApp.Console.OrdersProcessing.Models;
+using Navvy.SampleApp.Console.Utils;
 
 namespace Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep
 {
@@ -16,7 +18,7 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep
             OrdersProcessingContext context)
         {
             var ordersGenerator = new OrdersGenerator();
-            var csvWriter = new CsvWriter(new StreamWriter(context.Parameters.OrdersFilePath));
+            var csvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.OrdersFilePath)));
 
             yield return new PipelineTaskStep<ICollection<Order>>(
                 "GenerateOrders",
@@ -26,13 +28,13 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep
                 {
                     new PipelineBlock<ICollection<Order>>(
                         "WriteOrders",
-                        x => csvWriter.WriteRecords(x))
+                        x => csvWriter.Value.WriteRecords(x))
                 }
             );
 
             yield return new BasicTaskStep(
                 "GenerateOrdersCleanup",
-                () => csvWriter.Dispose(),
+                () => csvWriter.ValueIfCreated()?.Dispose(),
                 x => true);
         }
 
