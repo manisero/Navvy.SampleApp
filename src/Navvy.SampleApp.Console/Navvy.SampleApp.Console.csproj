@@ -48,7 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrdersProcessing\GenerateOrdersStep\GenerateOrdersStepFactory.cs" />
+    <Compile Include="OrdersProcessing\Models\Order.cs" />
+    <Compile Include="OrdersProcessing\Models\OrdersProcessingContext.cs" />
+    <Compile Include="OrdersProcessing\GenerateOrdersStep\OrdersGenerator.cs" />
+    <Compile Include="OrdersProcessing\OrdersProcessingTaskFactory.cs" />
     <Compile Include="OrdersProcessing\OrdersProcessor.cs" />
+    <Compile Include="OrdersProcessing\Models\OrdersStats.cs" />
+    <Compile Include="OrdersProcessing\Models\OrderToProcess.cs" />
+    <Compile Include="OrdersProcessing\ProcessOrdersStep\ProcessOrdersStepFactory.cs" />
+    <Compile Include="OrdersProcessing\WriteSummaryStep\WriteSummaryStepFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,5 +65,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
