@@ -1,19 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using CsvHelper;
+using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.PipelineProcessing;
 using Navvy.SampleApp.Console.OrdersProcessing.Models;
+using Navvy.SampleApp.Console.Utils;
 
 namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
 {
     public class ProcessOrdersStepFactory
     {
         public IEnumerable<ITaskStep> Create(
+            int batchSize,
             int expectedBatchesCount,
             OrdersProcessingContext context)
         {
+            var csvReader = new CsvReader(new StreamReader(context.Parameters.OrdersFilePath));
+            var orders = csvReader.GetRecords<Order>();
+
             yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
-                ReadOrdersToProcess(),
+                ReadOrdersToProcess(orders, batchSize),
                 expectedBatchesCount,
                 new List<PipelineBlock<ICollection<OrderToProcess>>>
                 {
@@ -27,23 +36,42 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
                             }
                         }),
                     new PipelineBlock<ICollection<OrderToProcess>>(
-                        "UpdateStats",
-                        x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats)),
-                    new PipelineBlock<ICollection<OrderToProcess>>(
                         "WriteProfits",
-                        x => WriteProfits(x))
+                        x => WriteProfits(x)),
+                    new PipelineBlock<ICollection<OrderToProcess>>(
+                        "UpdateStats",
+                        x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
                 });
+
+            yield return new BasicTaskStep(
+                "ProcessOrdersCleanup",
+                () => csvReader.Dispose(),
+                x => true);
         }
 
-        private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess()
+        private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess(
+            IEnumerable<Order> orders,
+            int batchSize)
         {
-            yield return new[] { new OrderToProcess() };
+            return orders
+                .Batch(batchSize)
+                .Select(
+                    batch => batch.Select(order => new OrderToProcess
+                          {
+                              Order = order
+                          })
+                          .ToArray());
         }
 
         private decimal CalculateOrderProfit(
             Order order)
         {
-            return 0m;
+            return order.Price * (1m - (decimal)order.CostRate);
+        }
+
+        private void WriteProfits(
+            ICollection<OrderToProcess> orders)
+        {
         }
 
         private OrdersStats UpdateOrdersStats(
@@ -51,11 +79,6 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
             OrdersStats stats)
         {
             return new OrdersStats();
-        }
-
-        private void WriteProfits(
-            ICollection<OrderToProcess> orders)
-        {
         }
     }
 }

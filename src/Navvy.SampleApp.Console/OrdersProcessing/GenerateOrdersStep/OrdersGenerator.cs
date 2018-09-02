@@ -15,7 +15,7 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep
             {
                 OrderId = ++_orderId,
                 Price = _random.Next(5, 1000),
-                CostRate = _random.Next(3, 15)
+                CostRate = _random.Next(3, 15) / 100f
             };
         }
     }
