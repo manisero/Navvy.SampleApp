@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navvy.SampleApp.Console", "Navvy.SampleApp.Console\Navvy.SampleApp.Console.csproj", "{661F0D28-B8F1-4A6D-A815-0EF8091DC7D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manisero.Navvy.SampleApp.Console", "Manisero.Navvy.SampleApp.Console\Manisero.Navvy.SampleApp.Console.csproj", "{661F0D28-B8F1-4A6D-A815-0EF8091DC7D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
-﻿using Navvy.SampleApp.Console.OrdersProcessing;
+﻿using Manisero.Navvy.SampleApp.Console.OrdersProcessing;
 
-namespace Navvy.SampleApp.Console
+namespace Manisero.Navvy.SampleApp.Console
 {
     class Program
     {

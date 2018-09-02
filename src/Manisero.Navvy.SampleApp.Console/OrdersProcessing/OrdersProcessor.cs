@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Manisero.Navvy;
 using Manisero.Navvy.Core;
 using Manisero.Navvy.Core.Events;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.Dataflow;
 using Manisero.Navvy.PipelineProcessing.Events;
 
-namespace Navvy.SampleApp.Console.OrdersProcessing
+namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
 {
     public class OrdersProcessor
     {

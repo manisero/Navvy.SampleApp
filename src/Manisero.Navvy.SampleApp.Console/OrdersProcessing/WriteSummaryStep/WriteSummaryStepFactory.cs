@@ -4,10 +4,10 @@ using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
-using Navvy.SampleApp.Console.OrdersProcessing.Models;
-using Navvy.SampleApp.Console.Utils;
+using Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models;
+using Manisero.Navvy.SampleApp.Console.Utils;
 
-namespace Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
+namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
 {
     public class WriteSummaryStepFactory
     {

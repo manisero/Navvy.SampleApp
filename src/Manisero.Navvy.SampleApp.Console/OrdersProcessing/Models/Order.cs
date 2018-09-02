@@ -1,4 +1,4 @@
-﻿namespace Navvy.SampleApp.Console.OrdersProcessing.Models
+﻿namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models
 {
     public class Order
     {

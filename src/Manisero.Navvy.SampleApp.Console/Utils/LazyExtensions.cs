@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Navvy.SampleApp.Console.Utils
+namespace Manisero.Navvy.SampleApp.Console.Utils
 {
     public static class LazyExtensions
     {

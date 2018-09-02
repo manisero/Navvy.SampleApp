@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
 using Manisero.Navvy.Core.Models;
-using Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep;
-using Navvy.SampleApp.Console.OrdersProcessing.Models;
-using Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep;
-using Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep;
+using Manisero.Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep;
+using Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models;
+using Manisero.Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep;
+using Manisero.Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep;
 
-namespace Navvy.SampleApp.Console.OrdersProcessing
+namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
 {
     public class OrdersProcessingTaskFactory
     {
