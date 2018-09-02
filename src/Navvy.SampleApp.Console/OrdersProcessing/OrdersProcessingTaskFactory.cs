@@ -1,4 +1,6 @@
-﻿using Manisero.Navvy.Core.Models;
+﻿using System.IO;
+using System.Linq;
+using Manisero.Navvy.Core.Models;
 using Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep;
 using Navvy.SampleApp.Console.OrdersProcessing.Models;
 using Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep;
@@ -16,17 +18,26 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
         {
             var context = new OrdersProcessingContext
             {
-                Parameters = new OrdersProcessingParameters(),
+                Parameters = new OrdersProcessingParameters
+                {
+                    OrdersFilePath = Path.GetTempFileName()
+                },
                 State = new OrdersProcessingState()
             };
 
-            var generatingBatchesCount = 1;
-            var processingBatchesCount = 1;
+            var generatingBatchesCount = 2;
+            var generatingBatchSize = 2;
+            var processingBatchesCount = 2;
+
+            var generateOrdersSteps = _generateOrdersStepFactory.Create(generatingBatchesCount, generatingBatchSize, context);
+            var processOrdersSteps = _processOrdersStepFactory.Create(processingBatchesCount, context);
+            var writeSummarySteps = _writeSummaryStepFactory.Create(context);
 
             return new TaskDefinition(
-                _generateOrdersStepFactory.Create(generatingBatchesCount, context),
-                _processOrdersStepFactory.Create(processingBatchesCount, context),
-                _writeSummaryStepFactory.Create(context));
+                generateOrdersSteps
+                    .Concat(processOrdersSteps)
+                    .Concat(writeSummarySteps)
+                    .ToList());
         }
     }
 }

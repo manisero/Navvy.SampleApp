@@ -7,11 +7,11 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
 {
     public class ProcessOrdersStepFactory
     {
-        public ITaskStep Create(
+        public IEnumerable<ITaskStep> Create(
             int expectedBatchesCount,
             OrdersProcessingContext context)
         {
-            return new PipelineTaskStep<ICollection<OrderToProcess>>(
+            yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
                 ReadOrdersToProcess(),
                 expectedBatchesCount,

@@ -1,4 +1,5 @@
-﻿using Manisero.Navvy.BasicProcessing;
+﻿using System.Collections.Generic;
+using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Navvy.SampleApp.Console.OrdersProcessing.Models;
 
@@ -6,10 +7,10 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
 {
     public class WriteSummaryStepFactory
     {
-        public ITaskStep Create(
+        public IEnumerable<ITaskStep> Create(
             OrdersProcessingContext context)
         {
-            return new BasicTaskStep(
+            yield return new BasicTaskStep(
                 "WriteSummary",
                 () => WriteSummary(context.State.Stats));
         }
