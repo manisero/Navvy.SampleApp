@@ -17,8 +17,10 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
             int expectedBatchesCount,
             OrdersProcessingContext context)
         {
-            var csvReader = new CsvReader(new StreamReader(context.Parameters.OrdersFilePath));
-            var orders = csvReader.GetRecords<Order>();
+            var ordersCsvReader = new CsvReader(new StreamReader(context.Parameters.OrdersFilePath));
+            var orders = ordersCsvReader.GetRecords<Order>();
+
+            var profitsCsvWriter = new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath));
 
             yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
@@ -37,7 +39,7 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
                         }),
                     new PipelineBlock<ICollection<OrderToProcess>>(
                         "WriteProfits",
-                        x => WriteProfits(x)),
+                        x => WriteProfits(x, profitsCsvWriter)),
                     new PipelineBlock<ICollection<OrderToProcess>>(
                         "UpdateStats",
                         x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
@@ -45,7 +47,11 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
 
             yield return new BasicTaskStep(
                 "ProcessOrdersCleanup",
-                () => csvReader.Dispose(),
+                () =>
+                {
+                    ordersCsvReader.Dispose();
+                    profitsCsvWriter.Dispose();
+                },
                 x => true);
         }
 
@@ -70,8 +76,19 @@ namespace Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
         }
 
         private void WriteProfits(
-            ICollection<OrderToProcess> orders)
+            ICollection<OrderToProcess> orders,
+            CsvWriter csvWriter)
         {
+            csvWriter.WriteRecords(
+                orders
+                .Select(
+                    x => new
+                    {
+                        x.Order.OrderId,
+                        x.Order.Price,
+                        x.Order.CostRate,
+                        x.Profit
+                    }));
         }
 
         private OrdersStats UpdateOrdersStats(

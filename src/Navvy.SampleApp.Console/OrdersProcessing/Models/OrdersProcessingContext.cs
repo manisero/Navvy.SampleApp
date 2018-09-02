@@ -10,6 +10,7 @@
     public class OrdersProcessingParameters
     {
         public string OrdersFilePath { get; set; }
+        public string ProfitsFilePath { get; set; }
     }
 
     public class OrdersProcessingState
