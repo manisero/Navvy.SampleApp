@@ -27,13 +27,11 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
                 State = new OrdersProcessingState()
             };
 
-            var generatingBatchesCount = 2;
-            var generatingBatchSize = 3;
-            var processingBatchesCount = 2;
-            var processingBatchSize = 3;
+            var batchesCount = 3;
+            var batchSize = 10000;
 
-            var generateOrdersSteps = _generateOrdersStepFactory.Create(generatingBatchesCount, generatingBatchSize, context);
-            var processOrdersSteps = _processOrdersStepFactory.Create(processingBatchSize, processingBatchesCount, context);
+            var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
+            var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
             var writeSummarySteps = _writeSummaryStepFactory.Create(context);
 
             return new TaskDefinition(
