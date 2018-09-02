@@ -34,10 +34,19 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
                 itemStarted: x => System.Console.WriteLine($"  Item {x.ItemNumber} (materialized in {x.MaterializationDuration.TotalMilliseconds}ms):"),
                 itemEnded: x => System.Console.WriteLine($"  Item {x.ItemNumber} ended after {x.Duration.TotalMilliseconds}ms."),
                 blockStarted: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber}..."),
-                blockEnded: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."));
+                blockEnded: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."),
+                pipelineEnded: x =>
+                {
+                    System.Console.WriteLine($"      Materialization: {x.TotalInputMaterializationDuration.TotalMilliseconds}ms");
+
+                    foreach (var blockDuration in x.TotalBlockDurations)
+                    {
+                        System.Console.WriteLine($"      {blockDuration.Key}: {blockDuration.Value.TotalMilliseconds}ms");
+                    }
+                });
 
             _executor = new TaskExecutorBuilder()
-                //.RegisterDataflowExecution()
+                .RegisterDataflowExecution()
                 .RegisterEvents(taskEvents)
                 .RegisterEvents(pipelineEvents)
                 .Build();

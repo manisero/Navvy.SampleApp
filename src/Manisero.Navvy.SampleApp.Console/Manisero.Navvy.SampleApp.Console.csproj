@@ -36,10 +36,10 @@
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="Manisero.Navvy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Manisero.Navvy.0.5.0\lib\net461\Manisero.Navvy.dll</HintPath>
+      <HintPath>..\packages\Manisero.Navvy.0.6.0\lib\net461\Manisero.Navvy.dll</HintPath>
     </Reference>
     <Reference Include="Manisero.Navvy.Dataflow, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Manisero.Navvy.Dataflow.0.5.0\lib\net461\Manisero.Navvy.Dataflow.dll</HintPath>
+      <HintPath>..\packages\Manisero.Navvy.Dataflow.0.6.0\lib\net461\Manisero.Navvy.Dataflow.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
