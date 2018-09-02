@@ -3,6 +3,7 @@ using Manisero.Navvy;
 using Manisero.Navvy.Core;
 using Manisero.Navvy.Core.Events;
 using Manisero.Navvy.Core.Models;
+using Manisero.Navvy.Dataflow;
 using Manisero.Navvy.PipelineProcessing.Events;
 
 namespace Navvy.SampleApp.Console.OrdersProcessing
@@ -28,10 +29,11 @@ namespace Navvy.SampleApp.Console.OrdersProcessing
             var pipelineEvents = new PipelineExecutionEvents(
                 itemStarted: x => System.Console.WriteLine($"  Item {x.ItemNumber}:"),
                 itemEnded: x => System.Console.WriteLine($"  Item {x.ItemNumber} ended after {x.Duration.TotalMilliseconds}ms."),
-                blockStarted: x => System.Console.WriteLine($"   {x.Block.Name} of {x.ItemNumber}..."),
-                blockEnded: x => System.Console.WriteLine($"   {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."));
+                blockStarted: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber}..."),
+                blockEnded: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."));
 
             _executor = new TaskExecutorBuilder()
+                .RegisterDataflowExecution()
                 .RegisterEvents(taskEvents)
                 .RegisterEvents(pipelineEvents)
                 .Build();
