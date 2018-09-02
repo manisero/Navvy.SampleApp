@@ -24,10 +24,9 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
 
             yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
                 "ProcessOrders",
-                new LazyEnumerablePipelineInput<ICollection<OrderToProcess>>(
-                    new Lazy<IEnumerable<ICollection<OrderToProcess>>>(
-                        () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize)),
-                    new Lazy<int>(() => expectedBatchesCount)),
+                new LazyPipelineInput<ICollection<OrderToProcess>>(
+                    () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
+                    () => expectedBatchesCount),
                 new List<PipelineBlock<ICollection<OrderToProcess>>>
                 {
                     new PipelineBlock<ICollection<OrderToProcess>>(
