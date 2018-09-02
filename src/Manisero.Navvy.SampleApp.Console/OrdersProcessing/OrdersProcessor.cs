@@ -31,13 +31,13 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
                 stepFailed: x => System.Console.WriteLine($"{x.Step.Name} failed"));
 
             var pipelineEvents = new PipelineExecutionEvents(
-                itemStarted: x => System.Console.WriteLine($"  Item {x.ItemNumber}:"),
+                itemStarted: x => System.Console.WriteLine($"  Item {x.ItemNumber} (materialized in {x.MaterializationDuration.TotalMilliseconds}ms):"),
                 itemEnded: x => System.Console.WriteLine($"  Item {x.ItemNumber} ended after {x.Duration.TotalMilliseconds}ms."),
                 blockStarted: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber}..."),
                 blockEnded: x => System.Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."));
 
             _executor = new TaskExecutorBuilder()
-                .RegisterDataflowExecution()
+                //.RegisterDataflowExecution()
                 .RegisterEvents(taskEvents)
                 .RegisterEvents(pipelineEvents)
                 .Build();
