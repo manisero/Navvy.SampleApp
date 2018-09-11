@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models;
-using Manisero.Navvy.SampleApp.Console.Utils;
 
 namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
 {
@@ -14,21 +12,19 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
         public IEnumerable<ITaskStep> Create(
             OrdersProcessingContext context)
         {
-            var csvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.SummaryFilePath)));
-
             yield return new BasicTaskStep(
                 "WriteSummary",
-                () => WriteSummary(context.State.Stats, csvWriter.Value));
-
-            yield return new BasicTaskStep(
-                "WriteSummaryCleanup",
-                () => csvWriter.ValueIfCreated()?.Dispose(),
-                x => true);
+                () =>
+                {
+                    WriteSummary(
+                        context.State.Stats,
+                        context.Parameters.SummaryFilePath);
+                });
         }
 
         private void WriteSummary(
             OrdersStats stats,
-            CsvWriter csvWriter)
+            string toPath)
         {
             var summary = new
             {
@@ -40,7 +36,10 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.WriteSummaryStep
                 AvgProfit = stats.TotalProfit / stats.OrdersCount
             };
 
-            csvWriter.WriteRecords(new[] { summary });
+            using (var csvWriter = new CsvWriter(new StreamWriter(toPath)))
+            {
+                csvWriter.WriteRecords(new[] { summary });
+            }
         }
     }
 }
