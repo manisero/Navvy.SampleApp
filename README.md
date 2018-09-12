@@ -1,2 +1,2 @@
 # Navvy.SampleApp
-Sample application demonstrating usage of Navvy.
+Sample application demonstrating usage of [Navvy](https://github.com/manisero/Navvy).
