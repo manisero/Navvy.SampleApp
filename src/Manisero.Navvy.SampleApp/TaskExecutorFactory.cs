@@ -1,5 +1,4 @@
 ﻿using System;
-using Manisero.Navvy.Core;
 using Manisero.Navvy.Core.Events;
 using Manisero.Navvy.Dataflow;
 using Manisero.Navvy.PipelineProcessing.Events;

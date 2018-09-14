@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing;
 
 namespace Manisero.Navvy.SampleApp

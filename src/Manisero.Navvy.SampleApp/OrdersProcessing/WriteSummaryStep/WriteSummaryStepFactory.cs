@@ -2,7 +2,6 @@
 using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
-using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 
 namespace Manisero.Navvy.SampleApp.OrdersProcessing.WriteSummaryStep

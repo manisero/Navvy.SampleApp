@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep;
