@@ -59,13 +59,13 @@
     <Compile Include="OrdersProcessing\Models\OrdersProcessingContext.cs" />
     <Compile Include="OrdersProcessing\GenerateOrdersStep\OrdersGenerator.cs" />
     <Compile Include="OrdersProcessing\OrdersProcessingTaskFactory.cs" />
-    <Compile Include="OrdersProcessing\OrdersProcessor.cs" />
     <Compile Include="OrdersProcessing\Models\OrdersStats.cs" />
     <Compile Include="OrdersProcessing\Models\OrderToProcess.cs" />
     <Compile Include="OrdersProcessing\ProcessOrdersStep\ProcessOrdersStepFactory.cs" />
     <Compile Include="OrdersProcessing\WriteSummaryStep\WriteSummaryStepFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskExecutorFactory.cs" />
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\LazyExtensions.cs" />
   </ItemGroup>

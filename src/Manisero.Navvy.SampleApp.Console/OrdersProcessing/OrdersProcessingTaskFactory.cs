@@ -14,7 +14,9 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
         private readonly ProcessOrdersStepFactory _processOrdersStepFactory = new ProcessOrdersStepFactory();
         private readonly WriteSummaryStepFactory _writeSummaryStepFactory = new WriteSummaryStepFactory();
 
-        public TaskDefinition Create()
+        public TaskDefinition Create(
+            int batchesCount = 10,
+            int batchSize = 100000)
         {
             var context = new OrdersProcessingContext
             {
@@ -26,9 +28,6 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
                 },
                 State = new OrdersProcessingState()
             };
-
-            var batchesCount = 10;
-            var batchSize = 100000;
 
             var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
             var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
@@ -42,3 +41,4 @@ namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing
         }
     }
 }
+    
