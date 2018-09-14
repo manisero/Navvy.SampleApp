@@ -7,10 +7,10 @@ using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.Core.Models;
 using Manisero.Navvy.PipelineProcessing;
 using Manisero.Navvy.PipelineProcessing.Models;
-using Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models;
-using Manisero.Navvy.SampleApp.Console.Utils;
+using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
+using Manisero.Navvy.SampleApp.Utils;
 
-namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.ProcessOrdersStep
+namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
 {
     public class ProcessOrdersStepFactory
     {

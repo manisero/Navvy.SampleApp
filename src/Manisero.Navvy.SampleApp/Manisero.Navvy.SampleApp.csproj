@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{661F0D28-B8F1-4A6D-A815-0EF8091DC7D5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Manisero.Navvy.SampleApp.Console</RootNamespace>
-    <AssemblyName>Manisero.Navvy.SampleApp.Console</AssemblyName>
+    <RootNamespace>Manisero.Navvy.SampleApp</RootNamespace>
+    <AssemblyName>Manisero.Navvy.SampleApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

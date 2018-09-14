@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Manisero.Navvy.Core.Models;
-using Manisero.Navvy.SampleApp.Console.OrdersProcessing;
+using Manisero.Navvy.SampleApp.OrdersProcessing;
 
-namespace Manisero.Navvy.SampleApp.Console
+namespace Manisero.Navvy.SampleApp
 {
     class Program
     {
@@ -22,21 +22,21 @@ namespace Manisero.Navvy.SampleApp.Console
             using (var cancellationSource = new CancellationTokenSource())
             {
                 var progress = new Progress<TaskProgress>(
-                    x => System.Console.WriteLine($"{x.StepName}: {x.ProgressPercentage}%"));
+                    x => Console.WriteLine($"{x.StepName}: {x.ProgressPercentage}%"));
 
                 Task.Run(() => WaitForCancellation(cancellationSource));
 
                 // Execute the task.
                 var taskResult = taskExecutor.Execute(task, progress, cancellationSource.Token);
 
-                System.Console.WriteLine($"Task outcome: {taskResult.Outcome}.");
+                Console.WriteLine($"Task outcome: {taskResult.Outcome}.");
             }
         }
 
         private static void WaitForCancellation(
             CancellationTokenSource cancellationSource)
         {
-            var input = (char)System.Console.Read();
+            var input = (char)Console.Read();
 
             if (input == 'c')
             {

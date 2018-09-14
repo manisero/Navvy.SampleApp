@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Manisero.Navvy.SampleApp.Console.Utils
+namespace Manisero.Navvy.SampleApp.Utils
 {
     public static class EnumerableExtensions
     {

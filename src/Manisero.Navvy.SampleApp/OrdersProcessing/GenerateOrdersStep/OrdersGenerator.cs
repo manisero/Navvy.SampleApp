@@ -1,7 +1,7 @@
 ﻿using System;
-using Manisero.Navvy.SampleApp.Console.OrdersProcessing.Models;
+using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 
-namespace Manisero.Navvy.SampleApp.Console.OrdersProcessing.GenerateOrdersStep
+namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
 {
     public class OrdersGenerator
     {
