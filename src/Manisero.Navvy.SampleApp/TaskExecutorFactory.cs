@@ -34,10 +34,10 @@ namespace Manisero.Navvy.SampleApp
                 });
 
             return new TaskExecutorBuilder()
-                   .RegisterDataflowExecution()
-                   .RegisterEvents(taskEvents)
-                   .RegisterEvents(pipelineEvents)
-                   .Build();
+                .RegisterDataflowExecution()
+                .RegisterEvents(taskEvents)
+                .RegisterEvents(pipelineEvents)
+                .Build();
         }
     }
 }

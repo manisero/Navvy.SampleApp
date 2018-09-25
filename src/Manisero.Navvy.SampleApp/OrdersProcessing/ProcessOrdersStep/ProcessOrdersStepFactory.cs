@@ -5,7 +5,6 @@ using System.Linq;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.PipelineProcessing;
-using Manisero.Navvy.PipelineProcessing.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
 
@@ -21,29 +20,23 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
             var ordersCsvReader = new Lazy<CsvReader>(() => new CsvReader(new StreamReader(context.Parameters.OrdersFilePath)));
             var profitsCsvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath)));
 
-            yield return new PipelineTaskStep<ICollection<OrderToProcess>>(
-                "ProcessOrders",
-                new LazyPipelineInput<ICollection<OrderToProcess>>(
+            yield return PipelineTaskStep
+                .Builder<ICollection<OrderToProcess>>("ProcessOrders")
+                .WithInput(
                     () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
-                    () => expectedBatchesCount),
-                new List<PipelineBlock<ICollection<OrderToProcess>>>
-                {
-                    new PipelineBlock<ICollection<OrderToProcess>>(
-                        "CalculateProfits",
-                        x =>
+                    () => expectedBatchesCount)
+                .WithBlock(
+                    "CalculateProfits",
+                    x =>
+                    {
+                        foreach (var orderToProcess in x)
                         {
-                            foreach (var orderToProcess in x)
-                            {
-                                orderToProcess.Profit = CalculateOrderProfit(orderToProcess.Order);
-                            }
-                        }),
-                    new PipelineBlock<ICollection<OrderToProcess>>(
-                        "WriteProfits",
-                        x => WriteProfits(x, profitsCsvWriter.Value)),
-                    new PipelineBlock<ICollection<OrderToProcess>>(
-                        "UpdateStats",
-                        x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
-                });
+                            orderToProcess.Profit = CalculateOrderProfit(orderToProcess.Order);
+                        }
+                    })
+                .WithBlock("WriteProfits", x => WriteProfits(x, profitsCsvWriter.Value))
+                .WithBlock("UpdateStats", x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
+                .Build();
 
             yield return new BasicTaskStep(
                 "ProcessOrdersCleanup",
@@ -79,8 +72,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
             CsvWriter csvWriter)
         {
             csvWriter.WriteRecords(
-                orders
-                .Select(
+                orders.Select(
                     x => new
                     {
                         x.Order.OrderId,
