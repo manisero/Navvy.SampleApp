@@ -35,11 +35,11 @@
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Manisero.Navvy, Version=0.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Manisero.Navvy.0.10.0\lib\netstandard2.0\Manisero.Navvy.dll</HintPath>
+    <Reference Include="Manisero.Navvy, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Manisero.Navvy.0.11.0\lib\netstandard2.0\Manisero.Navvy.dll</HintPath>
     </Reference>
-    <Reference Include="Manisero.Navvy.Dataflow, Version=0.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Manisero.Navvy.Dataflow.0.10.0\lib\netstandard2.0\Manisero.Navvy.Dataflow.dll</HintPath>
+    <Reference Include="Manisero.Navvy.Dataflow, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Manisero.Navvy.Dataflow.0.11.0\lib\netstandard2.0\Manisero.Navvy.Dataflow.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

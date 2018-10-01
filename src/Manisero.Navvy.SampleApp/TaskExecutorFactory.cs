@@ -19,7 +19,7 @@ namespace Manisero.Navvy.SampleApp
                 stepFailed: x => Console.WriteLine($"{x.Step.Name} failed"));
 
             var pipelineEvents = new PipelineExecutionEvents(
-                itemStarted: x => Console.WriteLine($"  Item {x.ItemNumber} (materialized in {x.MaterializationDuration.TotalMilliseconds}ms):"),
+                itemMaterialized: x => Console.WriteLine($"  Item {x.ItemNumber} (materialized in {x.MaterializationDuration.TotalMilliseconds}ms):"),
                 itemEnded: x => Console.WriteLine($"  Item {x.ItemNumber} ended after {x.Duration.TotalMilliseconds}ms."),
                 blockStarted: x => Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber}..."),
                 blockEnded: x => Console.WriteLine($"    {x.Block.Name} of {x.ItemNumber} took {x.Duration.TotalMilliseconds}ms."),
