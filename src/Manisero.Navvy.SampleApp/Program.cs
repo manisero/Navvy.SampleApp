@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Manisero.Navvy.Reporting;
 using Manisero.Navvy.SampleApp.OrdersProcessing;
 
 namespace Manisero.Navvy.SampleApp
@@ -14,10 +15,10 @@ namespace Manisero.Navvy.SampleApp
         static void Main(string[] args)
         {
             var artifactsFolderPath = Path.Combine(Path.GetTempPath(), "Navvy_SampleApp");
-            Directory.CreateDirectory(artifactsFolderPath);
 
             // Create TaskExecutor. It can be used to execute multiple tasks (it's stateless, can be singleton).
-            var taskExecutor = TaskExecutorFactory.Create();
+            var taskExecutor = TaskExecutorFactory.Create(
+                x => Path.Combine(artifactsFolderPath, x.Name, "reports"));
 
             // Create task. Generally given task should be executed only once (task can have state).
             var task = OrdersProcessingTaskFactory.Create(artifactsFolderPath);   
@@ -32,7 +33,10 @@ namespace Manisero.Navvy.SampleApp
                 // Execute the task.
                 var taskResult = taskExecutor.Execute(task, progress, cancellationSource.Token);
 
+                Console.WriteLine();
                 Console.WriteLine($"Task outcome: {taskResult.Outcome}.");
+                Console.WriteLine($"Artifacts saved to: {task.Extras.Get<string>(OrdersProcessingTaskFactory.ArtifactsFolderPathExtraKey)}");
+                Console.WriteLine($"Reports saved to: {task.GetExecutionReportsPath()}");
             }
         }
 

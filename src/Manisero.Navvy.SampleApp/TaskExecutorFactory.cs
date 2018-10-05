@@ -9,7 +9,8 @@ namespace Manisero.Navvy.SampleApp
 {
     public class TaskExecutorFactory
     {
-        public ITaskExecutor Create()
+        public ITaskExecutor Create(
+            Func<TaskDefinition, string> taskReportsFolderPathFactory)
         {
             var taskEvents = new TaskExecutionEvents(
                 taskStarted: x => Console.WriteLine("Task started."),
@@ -38,7 +39,7 @@ namespace Manisero.Navvy.SampleApp
             return new TaskExecutorBuilder()
                 .UseDataflowPipelineExecution()
                 .UseTaskExecutionLogger()
-                .UseTaskExecutionReporter()
+                .UseTaskExecutionReporter(taskReportsFolderPathFactory)
                 .RegisterEvents(taskEvents, pipelineEvents)
                 .Build();
         }

@@ -10,6 +10,8 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
 {
     public class OrdersProcessingTaskFactory
     {
+        public const string ArtifactsFolderPathExtraKey = "ArtifactsPath";
+
         private readonly GenerateOrdersStepFactory _generateOrdersStepFactory = new GenerateOrdersStepFactory();
         private readonly ProcessOrdersStepFactory _processOrdersStepFactory = new ProcessOrdersStepFactory();
         private readonly WriteSummaryStepFactory _writeSummaryStepFactory = new WriteSummaryStepFactory();
@@ -38,13 +40,17 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
             var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
             var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
             var writeSummarySteps = _writeSummaryStepFactory.Create(context);
-            
-            return new TaskDefinition(
+
+            var task = new TaskDefinition(
                 taskName,
                 generateOrdersSteps
                     .Concat(processOrdersSteps)
                     .Concat(writeSummarySteps)
                     .ToList());
+
+            task.Extras.Set(ArtifactsFolderPathExtraKey, taskArtifactsFolderPath);
+
+            return task;
         }
     }
 }
