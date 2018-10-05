@@ -1,7 +1,9 @@
 ﻿using System;
 using Manisero.Navvy.Core.Events;
 using Manisero.Navvy.Dataflow;
+using Manisero.Navvy.Logging;
 using Manisero.Navvy.PipelineProcessing.Events;
+using Manisero.Navvy.Reporting;
 
 namespace Manisero.Navvy.SampleApp
 {
@@ -34,9 +36,10 @@ namespace Manisero.Navvy.SampleApp
                 });
 
             return new TaskExecutorBuilder()
-                .RegisterDataflowExecution()
-                .RegisterEvents(taskEvents)
-                .RegisterEvents(pipelineEvents)
+                .UseDataflowPipelineExecution()
+                .UseTaskExecutionLogger()
+                .UseTaskExecutionReporter()
+                .RegisterEvents(taskEvents, pipelineEvents)
                 .Build();
         }
     }

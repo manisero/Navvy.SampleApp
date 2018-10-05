@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
@@ -14,16 +15,22 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
         private readonly WriteSummaryStepFactory _writeSummaryStepFactory = new WriteSummaryStepFactory();
 
         public TaskDefinition Create(
+            string artifactsFolderPath,
             int batchesCount = 10,
             int batchSize = 100000)
         {
+            var taskName = $"OrdersProcessing_{DateTime.Now:yyyyMMdd_hhmmss}";
+
+            var taskArtifactsFolderPath = Path.Combine(artifactsFolderPath, taskName);
+            Directory.CreateDirectory(taskArtifactsFolderPath);
+
             var context = new OrdersProcessingContext
             {
                 Parameters = new OrdersProcessingParameters
                 {
-                    OrdersFilePath = Path.GetTempFileName(),
-                    ProfitsFilePath = Path.GetTempFileName(),
-                    SummaryFilePath = Path.GetTempFileName()
+                    OrdersFilePath = Path.Combine(taskArtifactsFolderPath, "orders.csv"),
+                    ProfitsFilePath = Path.Combine(taskArtifactsFolderPath, "profits.csv"),
+                    SummaryFilePath = Path.Combine(taskArtifactsFolderPath, "summary.csv")
                 },
                 State = new OrdersProcessingState()
             };
@@ -31,8 +38,9 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
             var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
             var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
             var writeSummarySteps = _writeSummaryStepFactory.Create(context);
-
+            
             return new TaskDefinition(
+                taskName,
                 generateOrdersSteps
                     .Concat(processOrdersSteps)
                     .Concat(writeSummarySteps)
