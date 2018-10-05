@@ -21,7 +21,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
             int batchesCount = 10,
             int batchSize = 100000)
         {
-            var taskName = $"OrdersProcessing_{DateTime.Now:yyyyMMdd_hhmmss}";
+            var taskName = $"OrdersProcessing_{DateTime.Now:yyyyMMdd_HHmmss}";
 
             var taskArtifactsFolderPath = Path.Combine(artifactsFolderPath, taskName);
             Directory.CreateDirectory(taskArtifactsFolderPath);
