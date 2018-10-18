@@ -16,6 +16,7 @@ namespace Manisero.Navvy.SampleApp
                 taskStarted: x => Console.WriteLine("Task started."),
                 taskEnded: x => Console.WriteLine($"Task ended after {x.Duration.TotalMilliseconds}ms."),
                 stepStarted: x => Console.WriteLine($"{x.Step.Name}:"),
+                stepProgressed: x => Console.WriteLine($"{x.Step.Name} {x.ProgressPercentage}%"),
                 stepEnded: x => Console.WriteLine($"{x.Step.Name} took {x.Duration.TotalMilliseconds}ms."),
                 stepSkipped: x => Console.WriteLine($"{x.Step.Name} skipped"),
                 stepCanceled: x => Console.WriteLine($"{x.Step.Name} canceled"),

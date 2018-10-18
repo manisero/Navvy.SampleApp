@@ -25,13 +25,10 @@ namespace Manisero.Navvy.SampleApp
 
             using (var cancellationSource = new CancellationTokenSource())
             {
-                var progress = new Progress<TaskProgress>(
-                    x => Console.WriteLine($"{x.StepName}: {x.ProgressPercentage}%"));
-
                 Task.Run(() => WaitForCancellation(cancellationSource));
 
                 // Execute the task.
-                var taskResult = taskExecutor.Execute(task, progress, cancellationSource.Token);
+                var taskResult = taskExecutor.Execute(task, cancellationSource.Token);
 
                 Console.WriteLine();
                 Console.WriteLine($"Task outcome: {taskResult.Outcome}.");
