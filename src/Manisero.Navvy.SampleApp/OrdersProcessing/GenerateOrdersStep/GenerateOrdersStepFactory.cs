@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
+using Manisero.Navvy.Core;
 using Manisero.Navvy.PipelineProcessing;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
@@ -19,13 +20,12 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
             var ordersGenerator = new OrdersGenerator();
             var csvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.OrdersFilePath)));
 
-            yield return PipelineTaskStep
-                .Builder<ICollection<Order>>("GenerateOrders")
+            yield return TaskStepBuilder.Build.Pipeline<ICollection<Order>>("GenerateOrders")
                 .WithInput(GenerateOrders(ordersGenerator, batchesCount, batchSize), batchesCount)
                 .WithBlock("WriteOrders", x => csvWriter.Value.WriteRecords(x))
                 .Build();
 
-            yield return new BasicTaskStep(
+            yield return TaskStepBuilder.Build.Basic(
                 "GenerateOrdersCleanup",
                 () => csvWriter.ValueIfCreated()?.Dispose(),
                 x => true);

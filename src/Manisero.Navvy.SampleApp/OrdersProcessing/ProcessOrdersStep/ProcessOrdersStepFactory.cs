@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
+using Manisero.Navvy.Core;
 using Manisero.Navvy.PipelineProcessing;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
@@ -20,8 +21,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
             var ordersCsvReader = new Lazy<CsvReader>(() => new CsvReader(new StreamReader(context.Parameters.OrdersFilePath)));
             var profitsCsvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath)));
 
-            yield return PipelineTaskStep
-                .Builder<ICollection<OrderToProcess>>("ProcessOrders")
+            yield return TaskStepBuilder.Build.Pipeline<ICollection<OrderToProcess>>("ProcessOrders")
                 .WithInput(
                     () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
                     () => expectedBatchesCount)
@@ -38,7 +38,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
                 .WithBlock("UpdateStats", x => context.State.Stats = UpdateOrdersStats(x, context.State.Stats))
                 .Build();
 
-            yield return new BasicTaskStep(
+            yield return TaskStepBuilder.Build.Basic(
                 "ProcessOrdersCleanup",
                 () =>
                 {
