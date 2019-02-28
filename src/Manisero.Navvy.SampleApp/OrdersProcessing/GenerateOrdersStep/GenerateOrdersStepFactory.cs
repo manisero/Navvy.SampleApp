@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
-using Manisero.Navvy.Core;
 using Manisero.Navvy.PipelineProcessing;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
