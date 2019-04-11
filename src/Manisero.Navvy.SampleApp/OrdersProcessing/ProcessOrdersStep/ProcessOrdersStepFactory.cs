@@ -5,6 +5,7 @@ using System.Linq;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.PipelineProcessing;
+using Manisero.Navvy.PipelineProcessing.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
 
@@ -22,8 +23,9 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
 
             yield return TaskStepBuilder.Build.Pipeline<ICollection<OrderToProcess>>("ProcessOrders")
                 .WithInput(
-                    () => ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
-                    () => expectedBatchesCount)
+                    () => new PipelineInput<ICollection<OrderToProcess>>(
+                        ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
+                        expectedBatchesCount))
                 .WithBlock(
                     "CalculateProfits",
                     x =>

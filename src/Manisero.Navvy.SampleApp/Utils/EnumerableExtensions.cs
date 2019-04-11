@@ -9,31 +9,22 @@ namespace Manisero.Navvy.SampleApp.Utils
             this IEnumerable<TSource> source,
             int batchSize)
         {
-            using (var enumerator = source.GetEnumerator())
+            var batch = new List<TSource>(batchSize);
+
+            foreach (var item in source)
             {
-                while (true)
+                batch.Add(item);
+
+                if (batch.Count == batchSize)
                 {
-                    var batch = new List<TSource>(batchSize);
-
-                    for (var i = 0; i < batchSize; i++)
-                    {
-                        if (enumerator.MoveNext())
-                        {
-                            batch.Add(enumerator.Current);
-                        }
-                        else
-                        {
-                            if (batch.Any())
-                            {
-                                yield return batch;
-                            }
-
-                            yield break;
-                        }
-                    }
-
                     yield return batch;
+                    batch = new List<TSource>(batchSize);
                 }
+            }
+
+            if (batch.Any())
+            {
+                yield return batch;
             }
         }
     }
