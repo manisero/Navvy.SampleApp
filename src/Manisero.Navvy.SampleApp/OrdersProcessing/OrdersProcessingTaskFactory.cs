@@ -18,7 +18,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
 
         public TaskDefinition Create(
             string artifactsFolderPath,
-            int batchesCount = 10,
+            int ordersCount = 1000000,
             int batchSize = 100000)
         {
             var taskName = $"OrdersProcessing_{DateTime.Now:yyyyMMdd_HHmmss}";
@@ -37,8 +37,8 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing
                 State = new OrdersProcessingState()
             };
 
-            var generateOrdersSteps = _generateOrdersStepFactory.Create(batchesCount, batchSize, context);
-            var processOrdersSteps = _processOrdersStepFactory.Create(batchSize, batchesCount, context);
+            var generateOrdersSteps = _generateOrdersStepFactory.Create(ordersCount, batchSize, context);
+            var processOrdersSteps = _processOrdersStepFactory.Create(ordersCount, batchSize, context);
             var writeSummarySteps = _writeSummaryStepFactory.Create(context);
 
             var task = new TaskDefinition(

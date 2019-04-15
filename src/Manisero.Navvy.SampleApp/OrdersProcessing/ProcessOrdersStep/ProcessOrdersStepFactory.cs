@@ -5,17 +5,17 @@ using System.Linq;
 using CsvHelper;
 using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.PipelineProcessing;
-using Manisero.Navvy.PipelineProcessing.Models;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
+using Manisero.Navvy.Utils;
 
 namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
 {
     public class ProcessOrdersStepFactory
     {
         public IEnumerable<ITaskStep> Create(
+            int expectedOrdersCount,
             int batchSize,
-            int expectedBatchesCount,
             OrdersProcessingContext context)
         {
             var ordersCsvReader = new Lazy<CsvReader>(() => new CsvReader(new StreamReader(context.Parameters.OrdersFilePath)));
@@ -23,9 +23,10 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
 
             yield return TaskStepBuilder.Build.Pipeline<ICollection<OrderToProcess>>("ProcessOrders")
                 .WithInput(
-                    () => new PipelineInput<ICollection<OrderToProcess>>(
-                        ReadOrdersToProcess(ordersCsvReader.Value, batchSize),
-                        expectedBatchesCount))
+                    () => new BatchedPipelineInputItems<OrderToProcess>(
+                        ReadOrdersToProcess(ordersCsvReader.Value),
+                        expectedOrdersCount,
+                        batchSize))
                 .WithBlock(
                     "CalculateProfits",
                     x =>
@@ -49,17 +50,15 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
                 x => true);
         }
 
-        private IEnumerable<ICollection<OrderToProcess>> ReadOrdersToProcess(
-            CsvReader csvReader,
-            int batchSize)
+        private IEnumerable<OrderToProcess> ReadOrdersToProcess(
+            CsvReader csvReader)
         {
             csvReader.Read();
             csvReader.ReadHeader();
 
             return csvReader
                 .GetRecords<Order>()
-                .Select(order => new OrderToProcess { Order = order })
-                .Batch(batchSize);
+                .Select(order => new OrderToProcess { Order = order });
         }
 
         private decimal CalculateOrderProfit(

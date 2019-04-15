@@ -6,13 +6,14 @@ using Manisero.Navvy.BasicProcessing;
 using Manisero.Navvy.PipelineProcessing;
 using Manisero.Navvy.SampleApp.OrdersProcessing.Models;
 using Manisero.Navvy.SampleApp.Utils;
+using Manisero.Navvy.Utils;
 
 namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
 {
     public class GenerateOrdersStepFactory
     {
         public IEnumerable<ITaskStep> Create(
-            int batchesCount,
+            int ordersCount,
             int batchSize,
             OrdersProcessingContext context)
         {
@@ -20,7 +21,11 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
             var csvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.OrdersFilePath)));
 
             yield return TaskStepBuilder.Build.Pipeline<ICollection<Order>>("GenerateOrders")
-                .WithInput(GenerateOrders(ordersGenerator, batchesCount, batchSize), batchesCount)
+                .WithInput(
+                    () => new BatchedPipelineInputItems<Order>(
+                        ordersGenerator.GenerateMany(ordersCount),
+                        ordersCount,
+                        batchSize))
                 .WithBlock("WriteOrders", x => csvWriter.Value.WriteRecords(x))
                 .Build();
 
@@ -28,24 +33,6 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
                 "GenerateOrdersCleanup",
                 () => csvWriter.ValueIfCreated()?.Dispose(),
                 x => true);
-        }
-
-        private IEnumerable<ICollection<Order>> GenerateOrders(
-            OrdersGenerator ordersGenerator,
-            int batchesCount,
-            int batchSize)
-        {
-            for (var batchIndex = 0; batchIndex < batchesCount; batchIndex++)
-            {
-                var batch = new Order[batchSize];
-
-                for (var orderIndex = 0; orderIndex < batchSize; orderIndex++)
-                {
-                    batch[orderIndex] = ordersGenerator.GenerateNext();
-                }
-
-                yield return batch;
-            }
         }
     }
 }
