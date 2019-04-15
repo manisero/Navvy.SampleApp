@@ -26,7 +26,8 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
                     () => new BatchedPipelineInputItems<OrderToProcess>(
                         ReadOrdersToProcess(ordersCsvReader.Value),
                         expectedOrdersCount,
-                        batchSize))
+                        batchSize),
+                    "ReadOrders")
                 .WithBlock(
                     "CalculateProfits",
                     x =>

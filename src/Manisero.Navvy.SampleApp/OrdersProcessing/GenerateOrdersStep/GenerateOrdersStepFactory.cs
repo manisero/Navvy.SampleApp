@@ -25,7 +25,8 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
                     () => new BatchedPipelineInputItems<Order>(
                         ordersGenerator.GenerateMany(ordersCount),
                         ordersCount,
-                        batchSize))
+                        batchSize),
+                    "GenerateOrders")
                 .WithBlock("WriteOrders", x => csvWriter.Value.WriteRecords(x))
                 .Build();
 
