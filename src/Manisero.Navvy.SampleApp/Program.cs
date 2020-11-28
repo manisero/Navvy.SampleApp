@@ -32,8 +32,12 @@ namespace Manisero.Navvy.SampleApp
 
                 Console.WriteLine();
                 Console.WriteLine($"Task outcome: {taskResult.Outcome}.");
-                Console.WriteLine($"Artifacts saved to: {task.Extras.Get<string>(OrdersProcessingTaskFactory.ArtifactsFolderPathExtraKey)}");
-                Console.WriteLine($"Reports saved to: {task.GetExecutionReportsPath()}");
+
+                if (taskResult.Outcome == TaskOutcome.Successful)
+                {
+                    Console.WriteLine($"Artifacts saved to: {task.Extras.Get<string>(OrdersProcessingTaskFactory.ArtifactsFolderPathExtraKey)}");
+                    Console.WriteLine($"Reports saved to: {task.GetExecutionReportsPath()}");
+                }
             }
         }
 
