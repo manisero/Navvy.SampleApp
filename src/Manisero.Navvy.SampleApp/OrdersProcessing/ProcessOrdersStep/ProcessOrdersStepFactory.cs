@@ -21,7 +21,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.ProcessOrdersStep
             var ordersCsvReader = new Lazy<CsvReader>(() => new CsvReader(new StreamReader(context.Parameters.OrdersFilePath)));
             var profitsCsvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.ProfitsFilePath)));
 
-            yield return TaskStepBuilder.Build.Pipeline<ICollection<OrderToProcess>>("ProcessOrders")
+            yield return TaskStepBuilder.Build.Pipeline<List<OrderToProcess>>("ProcessOrders")
                 .WithInput(
                     () => new BatchedPipelineInputItems<OrderToProcess>(
                         ReadOrdersToProcess(ordersCsvReader.Value),

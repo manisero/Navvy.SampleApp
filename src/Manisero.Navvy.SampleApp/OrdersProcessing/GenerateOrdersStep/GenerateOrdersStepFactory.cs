@@ -20,7 +20,7 @@ namespace Manisero.Navvy.SampleApp.OrdersProcessing.GenerateOrdersStep
             var ordersGenerator = new OrdersGenerator();
             var csvWriter = new Lazy<CsvWriter>(() => new CsvWriter(new StreamWriter(context.Parameters.OrdersFilePath)));
 
-            yield return TaskStepBuilder.Build.Pipeline<ICollection<Order>>("GenerateOrders")
+            yield return TaskStepBuilder.Build.Pipeline<List<Order>>("GenerateOrders")
                 .WithInput(
                     () => new BatchedPipelineInputItems<Order>(
                         ordersGenerator.GenerateMany(ordersCount),
